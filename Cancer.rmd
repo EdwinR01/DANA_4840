@@ -1,0 +1,112 @@
+```{r}
+install.packages('stats')
+library(stats)
+install.packages('stats')
+library(ggplot2)
+install.packages('ggfortify')
+library(ggfortify)
+install.packages('cluster')
+library(cluster)
+```
+```{r}
+cancer_final <- read.csv('/Users/guneetsharma/Desktop/SEMESTER\ 3/DANA\ 4840/DANA\ 4840\ final\ project\ Cancer/archive-4/reordered_data.csv')
+head(cancer_final)
+length(cancer_final)
+```
+
+
+
+```{r}
+## Data cleaning
+missing_values <- sum(is.na(cancer_final))
+print(missing_values)
+```
+```{r}
+# Check for duplicates in the dataset
+duplicates <- cancer_final[duplicated(cancer_final), ]
+if (nrow(duplicates) > 0) {
+  print("Duplicates found:")
+  print(duplicates)
+} else {
+  print("No duplicates found.")
+}
+```
+
+```{r}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+
+# Calculate summary statistics
+summary_stats <- summary(cancer_final)
+
+# Create boxplots for each variable
+boxplot(cancer_final, las = 2)  # Rotate axis labels for better readability
+
+# Create histograms for each variable
+hist(cancer_final$expression, main = "Histogram of Expression", xlab = "Expression")
+
+# Create scatter plots for pairs of variables
+pairs(cancer_final)
+
+# Use Grubbs' test to detect outliers
+outliers <- grubbs.test(cancer_final$expression, type = 10)$outliers
+
+```
+
+
+```{r}
+install.packages("RColorBrewer")
+library(RColorBrewer)
+
+# Define the unique cancer labels
+unique_cancer_labels <- c("PRAD", "LUAD", "BRCA", "KIRC", "COAD")
+palette <- brewer.pal(length(unique_cancer_labels), "Set1")
+color_dict <- setNames(palette, unique_cancer_labels)
+print(color_dict)
+```
+```{r}
+library(ggplot2)
+long_data <- reshape2::melt(cancer_final, id.vars = "last_column", variable.name = "gene", value.name = "expression")
+ggplot(long_data, aes(x = last_column, y = expression, fill = last_column)) +
+        geom_boxplot() +
+        facet_wrap(~gene, scales = "free") +
+        labs(x = "Cancer Type", y = "Expression Value", title = "Distribution of Gene Expression by Cancer Type") +
+        scale_fill_manual(values = color_dict) +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+
+
+
+```{r}
+str(melted_data)
+
+```
+```{r}
+# Performing ANOVA
+anova_result <- aov(expression ~ last_column, data = melted_data)
+summary(anova_result)
+
+```
+
+
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
